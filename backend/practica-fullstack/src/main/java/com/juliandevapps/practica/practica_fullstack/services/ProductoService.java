@@ -30,6 +30,30 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
+    // Método para ajustar inventario (Suma o Resta)
+    public Producto ajustarInventario(Integer id, Integer cantidad, String razon) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        // Regla de Negocio: Validar que el stock final no sea negativo
+        if (producto.getExistencia() + cantidad < 0) {
+            throw new RuntimeException("Error: El ajuste resultaría en existencias negativas.");
+        }
+
+        producto.setExistencia(producto.getExistencia() + cantidad);
+        System.out.println("Ajuste realizado. Razón: " + razon); // Registro en consola
+        return productoRepository.save(producto);
+    }
+
+    // Método para activación/desactivación lógica
+    public Producto cambiarEstado(Integer id, boolean estado) {
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+
+        producto.setActivo(estado);
+        return productoRepository.save(producto);
+    }
+
     // Buscar por ID para el detalle
     public Producto buscarPorId(Integer id) {
         return productoRepository.findById(id).orElse(null);
@@ -40,3 +64,4 @@ public class ProductoService {
         productoRepository.deleteById(id);
     }
 }
+

@@ -29,4 +29,17 @@ public class ProductoController {
     public Producto detalle(@PathVariable Integer id) {
         return productoService.buscarPorId(id);
     }
+
+    // Endpoint para ajustar inventario (PATCH se usa para actualizaciones parciales)
+    @PatchMapping("/{id}/ajuste")
+    public Producto ajustar(@PathVariable Integer id, @RequestParam Integer cantidad, @RequestParam String razon) {
+        return productoService.ajustarInventario(id, cantidad, razon);
+    }
+
+    // Endpoint para activar/desactivar
+    @PatchMapping("/{id}/estado")
+    public Producto toggleEstado(@PathVariable Integer id, @RequestParam boolean activo) {
+        return productoService.cambiarEstado(id, activo);
+    }
 }
+
