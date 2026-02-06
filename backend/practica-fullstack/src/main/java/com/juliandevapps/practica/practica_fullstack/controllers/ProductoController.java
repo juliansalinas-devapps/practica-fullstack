@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/productos") // Endpoint base requerido
-@CrossOrigin(origins = "*") // Importante para que Angular pueda conectarse después
+@CrossOrigin(origins = "http://localhost:4200") // Importante para que Angular pueda conectarse después
 public class ProductoController {
 
     @Autowired
