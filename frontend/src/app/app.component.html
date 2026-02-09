@@ -50,7 +50,7 @@
   </div>
 
   <table class="table table-hover table-bordered shadow-sm">
-    <thead class="table-dark">
+    <thead class="table-dark text-center">
     <tr>
       <th>ID</th>
       <th>Nombre</th>
@@ -58,23 +58,36 @@
       <th>Precio</th>
       <th>Stock</th>
       <th>Estado</th>
+      <th>Acciones</th>
     </tr>
     </thead>
-    <tbody>
+    <tbody class="align-middle">
     <tr *ngFor="let producto of listaProductos">
-      <td>{{ producto.id }}</td>
+      <td class="text-center">{{ producto.id }}</td>
       <td><strong>{{ producto.nombre }}</strong></td>
       <td>{{ producto.marca }}</td>
-      <td>{{ producto.precio | currency }}</td>
-      <td>
+      <td class="text-end">{{ producto.precio | currency }}</td>
+      <td class="text-center">
           <span class="badge" [ngClass]="producto.existencia > 0 ? 'bg-info' : 'bg-danger'">
             {{ producto.existencia }}
           </span>
       </td>
-      <td>
+      <td class="text-center">
           <span class="badge" [ngClass]="producto.activo ? 'bg-success' : 'bg-secondary'">
             {{ producto.activo ? 'Activo' : 'Inactivo' }}
           </span>
+      </td>
+      <td class="text-center">
+        <div class="d-flex justify-content-center">
+          <button type="button" (click)="toggleEstado(producto)"
+                  [class]="producto.activo ? 'btn btn-sm btn-warning me-2' : 'btn btn-sm btn-success me-2'">
+            {{ producto.activo ? 'Desactivar' : 'Activar' }}
+          </button>
+
+          <button type="button" (click)="ajustarInventario(producto.id)" class="btn btn-sm btn-info text-white">
+            Ajustar Stock
+          </button>
+        </div>
       </td>
     </tr>
     </tbody>

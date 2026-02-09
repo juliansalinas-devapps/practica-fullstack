@@ -19,4 +19,14 @@ crearProducto(producto: any): Observable<any> {
   return this.http.post<any>(this.apiUrl, producto);
 }
 
+// Método para activar/desactivar
+cambiarEstado(id: number, activo: boolean): Observable<any> {
+  return this.http.patch(`${this.apiUrl}/${id}/estado?activo=${activo}`, {});
+}
+
+// Método para ajustar stock (Suma o Resta)
+ajustarStock(id: number, cantidad: number, razon: string): Observable<any> {
+  return this.http.patch(`${this.apiUrl}/${id}/ajuste?cantidad=${cantidad}&razon=${razon}`, {});
+}
+
 }
