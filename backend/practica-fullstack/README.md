@@ -1,20 +1,19 @@
-# Backend - API de Inventarios
+# Backend - Spring Boot API
 
-Servidor desarrollado con **Spring Boot** para gestionar los productos y el stock.
+Servicio RESTful encargado de la lógica de negocio y la persistencia de datos.
 
-## Requisitos e Instalación
-1. Tener instalado **XAMPP** y activar MySQL en el puerto `3306`.
-2. Crear la base de datos `prueba1_devapps`.
-3. Configurar el archivo `src/main/resources/application.properties` con tus credenciales:
-    - `spring.datasource.username=tu_usuario`
-    - `spring.datasource.password=tu_contraseña`
+## Tecnologías
+- **Spring Boot**: Framework principal.
+- **Spring Data JPA**: Para el manejo de la base de datos sin SQL manual.
+- **Lombok**: Para reducir el código repetitivo (Boilerplate).
+- **MySQL Driver**: Conector para la base de datos.
 
 ## Endpoints Principales
-* `GET /productos`: Listar todos los productos.
-* `POST /productos`: Crear un nuevo producto.
-* `PATCH /productos/{id}/ajustar-inventario`: (En desarrollo) Ajustar stock.
+- `GET /productos`: Listar inventario.
+- `POST /productos`: Guardar nuevo producto.
+- `PUT /productos/{id}`: Actualizar información completa.
+- `PATCH /productos/{id}/ajuste`: Incrementar o decrementar stock.
+- `DELETE /productos/{id}`: Eliminar registro.
 
-## Validaciones Implementadas
-- El nombre del producto es único.
-- El precio debe ser mayor a 0.
-- Las existencias no pueden ser negativas.
+## Configuración de Seguridad
+Se implementó `@CrossOrigin` para permitir peticiones exclusivas desde `http://localhost:4200`.

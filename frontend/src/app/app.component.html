@@ -1,23 +1,25 @@
 <div class="container mt-5">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="text-primary">Gestión de Inventarios</h1>
-    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalProducto">
+    <button class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#modalProducto" (click)="productoEditandoId = null; productoForm.reset({precio:0, existencia:0})">
       + Nuevo Producto
     </button>
   </div>
 
   <div class="modal fade" id="modalProducto" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Registrar Nuevo Producto</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-content border-0 shadow">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">
+            {{ productoEditandoId ? 'Editar Producto' : 'Registrar Nuevo Producto' }}
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="productoForm" (ngSubmit)="guardarProducto()">
             <div class="mb-3">
               <label class="form-label">Nombre del Producto</label>
-              <input type="text" class="form-control" formControlName="nombre" placeholder="Ej. Laptop Dell">
+              <input type="text" class="form-control" formControlName="nombre" placeholder="Ej. Monitor Pro">
             </div>
             <div class="mb-3">
               <label class="form-label">Marca</label>
@@ -33,14 +35,14 @@
                 <input type="number" class="form-control" formControlName="precio">
               </div>
               <div class="col-md-6 mb-3">
-                <label class="form-label">Existencia Inicial</label>
+                <label class="form-label">Stock</label>
                 <input type="number" class="form-control" formControlName="existencia">
               </div>
             </div>
-            <div class="modal-footer px-0 pb-0">
+            <div class="modal-footer px-0 pb-0 pt-3">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="submit" class="btn btn-primary" [disabled]="productoForm.invalid" data-bs-dismiss="modal">
-                Guardar Producto
+                {{ productoEditandoId ? 'Actualizar Cambios' : 'Guardar Producto' }}
               </button>
             </div>
           </form>
@@ -49,47 +51,60 @@
     </div>
   </div>
 
-  <table class="table table-hover table-bordered shadow-sm">
-    <thead class="table-dark text-center">
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Marca</th>
-      <th>Precio</th>
-      <th>Stock</th>
-      <th>Estado</th>
-      <th>Acciones</th>
-    </tr>
-    </thead>
-    <tbody class="align-middle">
-    <tr *ngFor="let producto of listaProductos">
-      <td class="text-center">{{ producto.id }}</td>
-      <td><strong>{{ producto.nombre }}</strong></td>
-      <td>{{ producto.marca }}</td>
-      <td class="text-end">{{ producto.precio | currency }}</td>
-      <td class="text-center">
-          <span class="badge" [ngClass]="producto.existencia > 0 ? 'bg-info' : 'bg-danger'">
-            {{ producto.existencia }}
-          </span>
-      </td>
-      <td class="text-center">
-          <span class="badge" [ngClass]="producto.activo ? 'bg-success' : 'bg-secondary'">
-            {{ producto.activo ? 'Activo' : 'Inactivo' }}
-          </span>
-      </td>
-      <td class="text-center">
-        <div class="d-flex justify-content-center">
-          <button type="button" (click)="toggleEstado(producto)"
-                  [class]="producto.activo ? 'btn btn-sm btn-warning me-2' : 'btn btn-sm btn-success me-2'">
-            {{ producto.activo ? 'Desactivar' : 'Activar' }}
-          </button>
+  <div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover table-bordered mb-0">
+      <thead class="table-dark text-center">
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Marca</th>
+        <th>Precio</th>
+        <th>Stock</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody class="align-middle">
+      <tr *ngFor="let producto of listaProductos">
+        <td class="text-center text-muted">{{ producto.id }}</td>
+        <td><strong>{{ producto.nombre }}</strong></td>
+        <td>{{ producto.marca }}</td>
+        <td class="text-end">{{ producto.precio | currency }}</td>
+        <td class="text-center">
+            <span class="badge" [ngClass]="producto.existencia > 0 ? 'bg-info' : 'bg-danger'">
+              {{ producto.existencia }}
+            </span>
+        </td>
+        <td class="text-center">
+            <span class="badge" [ngClass]="producto.activo ? 'bg-success' : 'bg-secondary'">
+              {{ producto.activo ? 'Activo' : 'Inactivo' }}
+            </span>
+        </td>
+        <td class="text-center">
+          <div class="d-flex justify-content-center">
+            <button class="btn btn-sm btn-outline-primary me-2" title="Editar"
+                    (click)="prepararEdicion(producto)"
+                    data-bs-toggle="modal" data-bs-target="#modalProducto">
+              ✏️
+            </button>
 
-          <button type="button" (click)="ajustarInventario(producto.id)" class="btn btn-sm btn-info text-white">
-            Ajustar Stock
-          </button>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+            <button (click)="toggleEstado(producto)"
+                    [class]="producto.activo ? 'btn btn-sm btn-warning me-2' : 'btn btn-sm btn-success me-2'"
+                    [title]="producto.activo ? 'Desactivar' : 'Activar'">
+              {{ producto.activo ? 'Off' : 'On' }}
+            </button>
+
+            <button (click)="ajustarInventario(producto.id)" class="btn btn-sm btn-info text-white me-2" title="Ajustar Stock">
+              📦
+            </button>
+
+            <button class="btn btn-sm btn-danger" title="Eliminar" (click)="borrarProducto(producto.id)">
+              🗑️
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>

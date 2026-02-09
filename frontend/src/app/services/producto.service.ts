@@ -29,4 +29,14 @@ ajustarStock(id: number, cantidad: number, razon: string): Observable<any> {
   return this.http.patch(`${this.apiUrl}/${id}/ajuste?cantidad=${cantidad}&razon=${razon}`, {});
 }
 
+// Editar un producto existente
+actualizarProducto(id: number, producto: any): Observable<any> {
+  return this.http.put(`${this.apiUrl}/${id}`, producto);
+}
+
+// Eliminar definitivamente de MySQL
+eliminarProducto(id: number): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/${id}`);
+}
+
 }

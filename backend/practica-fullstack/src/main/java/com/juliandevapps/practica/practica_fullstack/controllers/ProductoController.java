@@ -41,5 +41,26 @@ public class ProductoController {
     public Producto toggleEstado(@PathVariable Integer id, @RequestParam boolean activo) {
         return productoService.cambiarEstado(id, activo);
     }
+    // Endpoint para actualizar todos los campos del producto (CRUD - Update)
+    @PutMapping("/{id}")
+    public Producto actualizar(@PathVariable Integer id, @RequestBody Producto detallesProducto) {
+        Producto productoExistente = productoService.buscarPorId(id);
+
+        // Actualiza los campos con los nuevos datos recibidos de Angular
+        productoExistente.setNombre(detallesProducto.getNombre());
+        productoExistente.setMarca(detallesProducto.getMarca());
+        productoExistente.setCategoria(detallesProducto.getCategoria());
+        productoExistente.setPrecio(detallesProducto.getPrecio());
+        productoExistente.setExistencia(detallesProducto.getExistencia());
+
+        return productoService.guardar(productoExistente);
+    }
+
+    // Endpoint para eliminar físicamente (CRUD - Delete)
+    @DeleteMapping("/{id}")
+    public void eliminar(@PathVariable Integer id) {
+        productoService.eliminar(id);
+    }
+
 }
 
