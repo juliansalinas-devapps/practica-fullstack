@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductoService } from './services/producto.service';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { LoginComponent } from './components/login/login.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, LoginComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -14,6 +15,8 @@ export class AppComponent implements OnInit {
   listaProductos: any[] = [];
   productoForm: FormGroup;
   productoEditandoId: number | null = null; // Controla si es edición o creación
+
+  isLoggedIn: boolean = false;
 
   constructor(
     private productoService: ProductoService,
@@ -28,8 +31,21 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.obtenerProductos();
+ngOnInit(): void {
+    // Verificamos si existe la bandera de autenticación en el navegador
+    this.isLoggedIn = localStorage.getItem('auth') === 'true';
+
+    // Solo pedimos los productos si el usuario ya inició sesión
+    if (this.isLoggedIn) {
+      this.obtenerProductos();
+    }
+  }
+
+// --- LÓGICA DE SESIÓN ---
+  cerrarSesion() {
+    localStorage.removeItem('auth'); // Borra la marca de acceso
+    this.isLoggedIn = false;
+    location.reload(); // Recarga para limpiar cualquier dato en memoria
   }
 
   // --- LECTURA ---
